@@ -2,6 +2,9 @@
 #define SHADERWORKSHOP_H
 
 #include <QWidget>
+#include <QTabWidget>
+#include <QComboBox>
+#include <QHash>
 
 namespace Ui {
 class ShaderWorkshop;
@@ -15,8 +18,21 @@ public:
     explicit ShaderWorkshop(QWidget *parent = 0);
     ~ShaderWorkshop();
 
+private slots:
+    void newBufferRequested(const QString &name);
+    void bufferCloseRequested(int index);
+
 private:
+    void setupWidgets();
+    QString bufferName(int index) const;
+
     Ui::ShaderWorkshop *ui;
+    QTabWidget *tab;
+    QComboBox *comboBox;
+    QWidget *imagePage;
+    QHash<QString, QWidget*> bufferPages;
+    const QString defaultItemName;
+    const int maxBufferPages;
 };
 
 #endif // SHADERWORKSHOP_H
