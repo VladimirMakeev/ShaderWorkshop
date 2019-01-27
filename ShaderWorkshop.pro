@@ -19,9 +19,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         shaderworkshop.cpp \
-    renderer.cpp
+    renderer.cpp \
+    effect.cpp
 
 HEADERS  += shaderworkshop.h \
-    renderer.h
+    renderer.h \
+    effect.h
 
 FORMS    += shaderworkshop.ui
