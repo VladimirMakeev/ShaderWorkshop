@@ -10,6 +10,8 @@ namespace Ui {
 class ShaderWorkshop;
 }
 
+class EditorPage;
+
 class ShaderWorkshop : public QWidget
 {
     Q_OBJECT
@@ -29,8 +31,8 @@ private:
     Ui::ShaderWorkshop *ui;
     QTabWidget *tab;
     QComboBox *comboBox;
-    QWidget *imagePage;
-    QHash<QString, QWidget*> bufferPages;
+    EditorPage *imagePage;
+    QHash<QString, EditorPage*> bufferPages;
     const QString defaultItemName;
     const int maxBufferPages;
 };

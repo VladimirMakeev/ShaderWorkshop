@@ -1,10 +1,11 @@
 #include "shaderworkshop.h"
+#include "editorpage.h"
 #include "ui_shaderworkshop.h"
 
 ShaderWorkshop::ShaderWorkshop(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ShaderWorkshop),
-    imagePage(new QWidget),
+    imagePage(new EditorPage),
     defaultItemName("Add buffer"),
     maxBufferPages(4)
 {
@@ -64,7 +65,7 @@ void ShaderWorkshop::setupWidgets()
     for (int i = 0; i < maxBufferPages; i++) {
         QString name = bufferName(i);
 
-        bufferPages[name] = new QWidget;
+        bufferPages[name] = new EditorPage;
         comboBox->addItem(name);
     }
 
