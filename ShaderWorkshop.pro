@@ -20,10 +20,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         shaderworkshop.cpp \
     renderer.cpp \
-    effect.cpp
+    effect.cpp \
+    editorpage.cpp
 
 HEADERS  += shaderworkshop.h \
     renderer.h \
-    effect.h
+    effect.h \
+    editorpage.h
 
-FORMS    += shaderworkshop.ui
+FORMS    += shaderworkshop.ui \
+    editorpage.ui
