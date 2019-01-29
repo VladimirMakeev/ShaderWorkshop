@@ -19,12 +19,26 @@
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QPlainTextEdit" name="plainTextEdit"/>
+     <widget class="CodeEditor" name="plainTextEdit">
+      <property name="font">
+       <font>
+        <family>Courier New</family>
+        <kerning>false</kerning>
+       </font>
+      </property>
+     </widget>
      <widget class="QListWidget" name="listWidget"/>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CodeEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>codeeditor.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

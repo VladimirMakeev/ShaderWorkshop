@@ -21,12 +21,15 @@ SOURCES += main.cpp\
         shaderworkshop.cpp \
     renderer.cpp \
     effect.cpp \
-    editorpage.cpp
+    editorpage.cpp \
+    codeeditor.cpp
 
 HEADERS  += shaderworkshop.h \
     renderer.h \
     effect.h \
-    editorpage.h
+    editorpage.h \
+    linenumberarea.h \
+    codeeditor.h
 
 FORMS    += shaderworkshop.ui \
     editorpage.ui
