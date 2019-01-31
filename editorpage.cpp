@@ -1,4 +1,5 @@
 #include "editorpage.h"
+#include "glslhighlighter.h"
 #include "ui_editorpage.h"
 
 EditorPage::EditorPage(QWidget *parent) :
@@ -8,6 +9,8 @@ EditorPage::EditorPage(QWidget *parent) :
     ui->setupUi(this);
 
     ui->listWidget->hide();
+
+    highlighter = new GLSLHighlighter(ui->plainTextEdit->document());
 }
 
 EditorPage::~EditorPage()

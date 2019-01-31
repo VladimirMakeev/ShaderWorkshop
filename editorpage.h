@@ -7,6 +7,8 @@ namespace Ui {
 class EditorPage;
 }
 
+class GLSLHighlighter;
+
 class EditorPage : public QWidget
 {
     Q_OBJECT
@@ -17,6 +19,7 @@ public:
 
 private:
     Ui::EditorPage *ui;
+    GLSLHighlighter *highlighter;
 };
 
 #endif // EDITORPAGE_H

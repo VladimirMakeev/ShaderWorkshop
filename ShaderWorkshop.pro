@@ -22,14 +22,16 @@ SOURCES += main.cpp\
     renderer.cpp \
     effect.cpp \
     editorpage.cpp \
-    codeeditor.cpp
+    codeeditor.cpp \
+    glslhighlighter.cpp
 
 HEADERS  += shaderworkshop.h \
     renderer.h \
     effect.h \
     editorpage.h \
     linenumberarea.h \
-    codeeditor.h
+    codeeditor.h \
+    glslhighlighter.h
 
 FORMS    += shaderworkshop.ui \
     editorpage.ui
