@@ -16,13 +16,14 @@ public:
     explicit Renderer(QWidget *parent = Q_NULLPTR);
     virtual ~Renderer();
 
+    QString defaultFragmentShader() const;
+
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
     void resizeGL(int w, int h) Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
 
 private:
-    QString defaultFragmentShader() const;
     void setupVertexShader();
     void setupBuffers();
 

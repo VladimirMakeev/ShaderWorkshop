@@ -8,6 +8,7 @@ class EditorPage;
 }
 
 class GLSLHighlighter;
+class CodeEditor;
 
 class EditorPage : public QWidget
 {
@@ -17,8 +18,12 @@ public:
     explicit EditorPage(QWidget *parent = 0);
     ~EditorPage();
 
+    QString shaderSource() const;
+    void setShaderSource(const QString &source);
+
 private:
     Ui::EditorPage *ui;
+    CodeEditor *editor;
     GLSLHighlighter *highlighter;
 };
 

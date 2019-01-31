@@ -11,6 +11,7 @@ class ShaderWorkshop;
 }
 
 class EditorPage;
+class Renderer;
 
 class ShaderWorkshop : public QWidget
 {
@@ -29,6 +30,7 @@ private:
     QString bufferName(int index) const;
 
     Ui::ShaderWorkshop *ui;
+    Renderer *renderer;
     QTabWidget *tab;
     QComboBox *comboBox;
     EditorPage *imagePage;

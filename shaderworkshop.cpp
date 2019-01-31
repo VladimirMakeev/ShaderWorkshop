@@ -1,5 +1,6 @@
 #include "shaderworkshop.h"
 #include "editorpage.h"
+#include "renderer.h"
 #include "ui_shaderworkshop.h"
 
 ShaderWorkshop::ShaderWorkshop(QWidget *parent) :
@@ -10,6 +11,8 @@ ShaderWorkshop::ShaderWorkshop(QWidget *parent) :
     maxBufferPages(4)
 {
     ui->setupUi(this);
+
+    renderer = ui->openGLWidget;
 
     setupWidgets();
 }
@@ -55,6 +58,8 @@ void ShaderWorkshop::setupWidgets()
 
     Q_ASSERT(tab->count() == 0);
 
+    imagePage->setShaderSource(renderer->defaultFragmentShader());
+
     int index = tab->insertTab(tab->count(), imagePage, tr("Image"));
     // user should not be able to close main image page
     tab->tabBar()->setTabButton(index, QTabBar::LeftSide, Q_NULLPTR);
@@ -63,9 +68,11 @@ void ShaderWorkshop::setupWidgets()
     comboBox->addItem(defaultItemName);
 
     for (int i = 0; i < maxBufferPages; i++) {
-        QString name = bufferName(i);
+        EditorPage *page = new EditorPage;
+        page->setShaderSource(renderer->defaultFragmentShader());
 
-        bufferPages[name] = new EditorPage;
+        QString name = bufferName(i);
+        bufferPages[name] = page;
         comboBox->addItem(name);
     }
 
