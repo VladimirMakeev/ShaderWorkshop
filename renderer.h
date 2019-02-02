@@ -24,7 +24,7 @@ public:
     /// delete existing effect with specified index
     void deleteEffect(int index);
     /// recompile fragment shader for effect
-    void recompileEffectShader(int index, const QString &source);
+    QString recompileEffectShader(int index, const QString &source);
 
 protected:
     void initializeGL() Q_DECL_OVERRIDE;

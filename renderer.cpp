@@ -93,10 +93,36 @@ void Renderer::deleteEffect(int index)
     doneCurrent();
 }
 
-void Renderer::recompileEffectShader(int index, const QString &source)
+QString Renderer::recompileEffectShader(int index, const QString &source)
 {
-    Q_UNUSED(index);
-    Q_UNUSED(source);
+    Q_ASSERT(effects.contains(index));
+
+    Effect *effect = effects.value(index);
+    QOpenGLShader *fragment = effect->fragmentShader;
+    QString log;
+
+    makeCurrent();
+
+    if (!fragment->compileSourceCode(source.toLocal8Bit().data())) {
+        // failed to compile new source code, save log and fallback
+        log = fragment->log();
+
+        fragment->compileSourceCode(effect->fallbackSource.toLocal8Bit().data());
+    }
+    else {
+        effect->fallbackSource = source;
+    }
+
+    bool result = effect->program->link();
+
+    Q_ASSERT(result == true);
+
+    // reset playback frame counter
+    effect->frame = 0;
+
+    doneCurrent();
+
+    return log;
 }
 
 void Renderer::setupVertexShader()
