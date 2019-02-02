@@ -2,6 +2,7 @@
 #define EDITORPAGE_H
 
 #include <QWidget>
+#include <QListWidget>
 
 namespace Ui {
 class EditorPage;
@@ -21,10 +22,13 @@ public:
     QString shaderSource() const;
     void setShaderSource(const QString &source);
 
+    void shaderLogUpdated(const QString &log);
+
 private:
     Ui::EditorPage *ui;
     CodeEditor *editor;
     GLSLHighlighter *highlighter;
+    QListWidget *logList;
 };
 
 #endif // EDITORPAGE_H

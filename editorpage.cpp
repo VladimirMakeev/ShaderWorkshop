@@ -10,7 +10,8 @@ EditorPage::EditorPage(QWidget *parent) :
     ui->setupUi(this);
 
     editor = ui->plainTextEdit;
-    ui->listWidget->hide();
+    logList = ui->listWidget;
+    logList->hide();
 
     highlighter = new GLSLHighlighter(editor->document());
 }
@@ -28,4 +29,18 @@ QString EditorPage::shaderSource() const
 void EditorPage::setShaderSource(const QString &source)
 {
     editor->setPlainText(source);
+}
+
+void EditorPage::shaderLogUpdated(const QString &log)
+{
+    logList->clear();
+
+    if (log.isEmpty()) {
+        logList->hide();
+        return;
+    }
+
+    QString::SplitBehavior behavior = QString::SplitBehavior::SkipEmptyParts;
+    logList->addItems(log.split('\n', behavior));
+    logList->show();
 }

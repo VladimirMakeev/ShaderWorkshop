@@ -150,5 +150,7 @@ void ShaderWorkshop::on_actionRecompile_Shader_triggered()
     EditorPage *page = currentPage();
     const QString source = page->shaderSource();
 
-    renderer->recompileEffectShader(pageIndex(page), source);
+    QString log = renderer->recompileEffectShader(pageIndex(page), source);
+
+    page->shaderLogUpdated(log);
 }
