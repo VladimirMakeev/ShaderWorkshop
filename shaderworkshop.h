@@ -21,22 +21,34 @@ public:
     explicit ShaderWorkshop(QWidget *parent = 0);
     ~ShaderWorkshop();
 
+protected:
+    virtual void paintEvent(QPaintEvent *event);
+
 private slots:
     void newBufferRequested(const QString &name);
-    void bufferCloseRequested(int index);
+    void bufferCloseRequested(int tabIndex);
+
+    void on_actionRecompile_Shader_triggered();
 
 private:
     void setupWidgets();
+    EditorPage* createPage(const QString &name, int pageIndex);
+    void createMenus();
     QString bufferName(int index) const;
+    EditorPage* currentPage() const;
+    int pageIndex(EditorPage *page) const;
 
     Ui::ShaderWorkshop *ui;
     Renderer *renderer;
     QTabWidget *tab;
     QComboBox *comboBox;
-    EditorPage *imagePage;
-    QHash<QString, EditorPage*> bufferPages;
+    QHash<QString, EditorPage*> pages;
+    /// indices for renderer effects management
+    QHash<EditorPage*, int> pageIndices;
     const QString defaultItemName;
     const int maxBufferPages;
+    const int imagePageIndex;
+    bool imageEffectCreated;
 };
 
 #endif // SHADERWORKSHOP_H
