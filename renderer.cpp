@@ -2,6 +2,7 @@
 
 Renderer::Renderer(QWidget *parent) :
     QOpenGLWidget(parent),
+    mainImage(Q_NULLPTR),
     fboTextureSize(1024, 768)
 {
 }
@@ -14,7 +15,7 @@ Renderer::~Renderer()
     vao.release();
 
     delete vertexShader;
-    delete mainImage;
+    qDeleteAll(effects);
 
     doneCurrent();
 }
@@ -28,8 +29,6 @@ void Renderer::initializeGL()
     setupVertexShader();
 
     setupBuffers();
-
-    mainImage = createEffect();
 }
 
 void Renderer::resizeGL(int w, int h)
@@ -40,16 +39,14 @@ void Renderer::resizeGL(int w, int h)
 
 void Renderer::paintGL()
 {
-    Q_ASSERT(mainImage != Q_NULLPTR);
+    // there is no reason to render at all if we don't have main image
+    if (!mainImage) {
+        return;
+    }
 
-    bool result = QOpenGLFramebufferObject::bindDefault();
+    renderEffects();
 
-    Q_ASSERT(result == true);
-
-    glViewport(0, 0, viewSize.width(), viewSize.height());
-
-    renderEffect(*mainImage, viewSize);
-    mainImage->frame++;
+    renderMainImage();
 }
 
 QString Renderer::defaultFragmentShader() const
@@ -63,6 +60,43 @@ QString Renderer::defaultFragmentShader() const
         "fragColor = vec4(0.0, 1.0, 0.5, 1.0);\n"
         "}\n"
     };
+}
+
+void Renderer::createEffect(int index)
+{
+    Q_ASSERT(!effects.contains(index));
+
+    Effect *effect = createEffect();
+
+    effects[index] = effect;
+
+    // first created effect will become the main image
+    if (!mainImage) {
+        mainImage = effect;
+    }
+}
+
+void Renderer::deleteEffect(int index)
+{
+    Q_ASSERT(effects.contains(index));
+
+    Effect *effect = effects.value(index);
+
+    int removed = effects.remove(index);
+
+    Q_ASSERT(removed == 1);
+
+    makeCurrent();
+
+    delete effect;
+
+    doneCurrent();
+}
+
+void Renderer::recompileEffectShader(int index, const QString &source)
+{
+    Q_UNUSED(index);
+    Q_UNUSED(source);
 }
 
 void Renderer::setupVertexShader()
@@ -117,6 +151,8 @@ void Renderer::setupBuffers()
 
 Effect* Renderer::createEffect()
 {
+    makeCurrent();
+
     QOpenGLShader *fragment = new QOpenGLShader(QOpenGLShader::ShaderTypeBit::Fragment, this);
     QString source = defaultFragmentShader();
 
@@ -140,7 +176,44 @@ Effect* Renderer::createEffect()
 
     QOpenGLFramebufferObject *fbo = new QOpenGLFramebufferObject(fboTextureSize);
 
+    doneCurrent();
+
     return new Effect(program, fragment, fbo, source);
+}
+
+void Renderer::renderEffects()
+{
+    glViewport(0, 0, fboTextureSize.width(), fboTextureSize.height());
+
+    for (auto &effect : effects) {
+        Q_ASSERT(effect != Q_NULLPTR);
+
+        // skip main image rendering
+        if (effect == mainImage) {
+            continue;
+        }
+
+        bool result = effect->framebuffer->bind();
+        Q_ASSERT(result == true);
+
+        renderEffect(*effect, fboTextureSize);
+        effect->frame++;
+    }
+}
+
+void Renderer::renderMainImage()
+{
+    Q_ASSERT(mainImage != Q_NULLPTR);
+
+    // render main image using default fbo
+    bool result = QOpenGLFramebufferObject::bindDefault();
+
+    Q_ASSERT(result == true);
+
+    glViewport(0, 0, viewSize.width(), viewSize.height());
+
+    renderEffect(*mainImage, viewSize);
+    mainImage->frame++;
 }
 
 void Renderer::renderEffect(Effect &effect, QSize textureSize)

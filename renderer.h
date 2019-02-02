@@ -6,6 +6,7 @@
 #include <QOpenGLShader>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
+#include <QHash>
 #include "effect.h"
 
 class Renderer : public QOpenGLWidget, protected QOpenGLFunctions
@@ -18,6 +19,13 @@ public:
 
     QString defaultFragmentShader() const;
 
+    /// create new effect with specified index
+    void createEffect(int index);
+    /// delete existing effect with specified index
+    void deleteEffect(int index);
+    /// recompile fragment shader for effect
+    void recompileEffectShader(int index, const QString &source);
+
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
     void resizeGL(int w, int h) Q_DECL_OVERRIDE;
@@ -28,11 +36,14 @@ private:
     void setupBuffers();
 
     Effect* createEffect();
+    void renderEffects();
+    void renderMainImage();
     void renderEffect(Effect &effect, QSize textureSize);
     /// bind textures according to this effect input channels settings,
     /// set sampler settings
     void bindEffectTextures(const Effect &effect);
 
+    QHash<int, Effect*> effects;
     Effect *mainImage;
     /// vertex shader used for all effects
     QOpenGLShader *vertexShader;
