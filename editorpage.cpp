@@ -14,6 +14,9 @@ EditorPage::EditorPage(QWidget *parent) :
     logList->hide();
 
     highlighter = new GLSLHighlighter(editor->document());
+
+    connect(logList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(logMessageSelected(QListWidgetItem*)));
 }
 
 EditorPage::~EditorPage()
@@ -43,4 +46,30 @@ void EditorPage::shaderLogUpdated(const QString &log)
     QString::SplitBehavior behavior = QString::SplitBehavior::SkipEmptyParts;
     logList->addItems(log.split('\n', behavior));
     logList->show();
+}
+
+void EditorPage::logMessageSelected(QListWidgetItem *item)
+{
+    int line = 1;
+
+    if (parseLogMessage(item->text(), line)) {
+        editor->highlightLine(line);
+        editor->setFocus();
+    }
+}
+
+bool EditorPage::parseLogMessage(const QString &message, int &line) const
+{
+    // typical OpenGL shader compilation error message:
+    // "ERROR: 0:<line>: <description>"
+    QRegularExpression re("(\\w+): \\d+:(\\d+): ([^\n]*)");
+
+    auto match = re.match(message);
+    bool matched = match.hasMatch();
+
+    if (matched) {
+        line = match.captured(2).toInt();
+    }
+
+    return matched;
 }

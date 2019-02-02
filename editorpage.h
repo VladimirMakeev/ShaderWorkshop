@@ -24,7 +24,12 @@ public:
 
     void shaderLogUpdated(const QString &log);
 
+private slots:
+    void logMessageSelected(QListWidgetItem *item);
+
 private:
+    bool parseLogMessage(const QString &message, int &line) const;
+
     Ui::EditorPage *ui;
     CodeEditor *editor;
     GLSLHighlighter *highlighter;
