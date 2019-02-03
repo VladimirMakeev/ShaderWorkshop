@@ -3,7 +3,9 @@
 Renderer::Renderer(QWidget *parent) :
     QOpenGLWidget(parent),
     mainImage(Q_NULLPTR),
-    fboTextureSize(1024, 768)
+    updateTimer(new QTimer(this)),
+    fboTextureSize(1024, 768),
+    fps(60)
 {
     timer.start();
 }
@@ -30,6 +32,9 @@ void Renderer::initializeGL()
     setupVertexShader();
 
     setupBuffers();
+
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(update()));
+    updateTimer->start(1000.0 / fps);
 }
 
 void Renderer::resizeGL(int w, int h)

@@ -8,6 +8,7 @@
 #include <QOpenGLBuffer>
 #include <QHash>
 #include <QElapsedTimer>
+#include <QTimer>
 #include "effect.h"
 
 class Renderer : public QOpenGLWidget, protected QOpenGLFunctions
@@ -49,6 +50,7 @@ private:
     Effect *mainImage;
     /// vertex shader used for all effects
     QOpenGLShader *vertexShader;
+    QTimer *updateTimer;
 
     QOpenGLVertexArrayObject vao;
     QOpenGLBuffer vbo;
@@ -56,6 +58,7 @@ private:
 
     QSize fboTextureSize;
     QSize viewSize;
+    int fps;
 };
 
 #endif // RENDERER_H
