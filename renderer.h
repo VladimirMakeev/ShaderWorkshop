@@ -7,6 +7,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include <QHash>
+#include <QElapsedTimer>
 #include "effect.h"
 
 class Renderer : public QOpenGLWidget, protected QOpenGLFunctions
@@ -42,6 +43,7 @@ private:
     /// bind textures according to this effect input channels settings,
     /// set sampler settings
     void bindEffectTextures(const Effect &effect);
+    void setUniforms(const Effect &effect, QSize textureSize);
 
     QHash<int, Effect*> effects;
     Effect *mainImage;
@@ -50,6 +52,7 @@ private:
 
     QOpenGLVertexArrayObject vao;
     QOpenGLBuffer vbo;
+    QElapsedTimer timer;
 
     QSize fboTextureSize;
     QSize viewSize;

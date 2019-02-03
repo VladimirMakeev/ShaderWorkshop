@@ -5,6 +5,7 @@ Renderer::Renderer(QWidget *parent) :
     mainImage(Q_NULLPTR),
     fboTextureSize(1024, 768)
 {
+    timer.start();
 }
 
 Renderer::~Renderer()
@@ -56,8 +57,23 @@ QString Renderer::defaultFragmentShader() const
         "\n"
         "out vec4 fragColor;\n"
         "\n"
-        "void main(void) {\n"
-        "fragColor = vec4(0.0, 1.0, 0.5, 1.0);\n"
+        "// time (in seconds)\n"
+        "uniform float iTime;\n"
+        "// shader playback frame\n"
+        "uniform int iFrame;\n"
+        "// viewport resolution (in pixels)\n"
+        "uniform vec2 iResolution;\n"
+        "\n"
+        "void main(void)\n"
+        "{\n"
+        "    // normalized pixel coordinates (from 0 to 1)\n"
+        "    vec2 uv = gl_FragCoord.xy / iResolution;\n"
+        "\n"
+        "    // time varying pixel color\n"
+        "    vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0.0, 2.0, 4.0));\n"
+        "\n"
+        "    // output to screen\n"
+        "    fragColor = vec4(col, 1.0);\n"
         "}\n"
     };
 }
@@ -256,6 +272,8 @@ void Renderer::renderEffect(Effect &effect, QSize textureSize)
 
     Q_ASSERT(result == true);
 
+    setUniforms(effect, textureSize);
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -272,4 +290,14 @@ void Renderer::bindEffectTextures(const Effect &effect)
 
         glBindTexture(GL_TEXTURE_2D, id);
     }
+}
+
+void Renderer::setUniforms(const Effect &effect, QSize textureSize)
+{
+    QOpenGLShaderProgram *program = effect.program;
+    GLfloat currentTime = timer.elapsed() / 1000.0f;
+
+    program->setUniformValue("iTime", currentTime);
+    program->setUniformValue("iFrame", effect.frame);
+    program->setUniformValue("iResolution", textureSize);
 }
