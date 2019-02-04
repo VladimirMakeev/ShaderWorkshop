@@ -34,6 +34,11 @@ void EditorPage::setShaderSource(const QString &source)
     editor->setPlainText(source);
 }
 
+bool EditorPage::isShaderSourceModified() const
+{
+    return editor->document()->isModified();
+}
+
 void EditorPage::shaderLogUpdated(const QString &log)
 {
     logList->clear();

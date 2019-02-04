@@ -75,6 +75,28 @@
     <string>Ctrl+R</string>
    </property>
   </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open Shader...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open GLSL Fragment Shader</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save Shader...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save current active page shader</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

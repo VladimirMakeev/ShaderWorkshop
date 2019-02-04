@@ -30,6 +30,10 @@ private slots:
 
     void on_actionRecompile_Shader_triggered();
 
+    void on_actionOpen_triggered();
+
+    void on_actionSave_triggered();
+
 private:
     void setupWidgets();
     EditorPage* createPage(const QString &name, int pageIndex);

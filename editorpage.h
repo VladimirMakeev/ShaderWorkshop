@@ -21,6 +21,7 @@ public:
 
     QString shaderSource() const;
     void setShaderSource(const QString &source);
+    bool isShaderSourceModified() const;
 
     void shaderLogUpdated(const QString &log);
 

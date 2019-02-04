@@ -3,6 +3,8 @@
 #include "renderer.h"
 #include "ui_shaderworkshop.h"
 #include <QMenuBar>
+#include <QFileDialog>
+#include <QMessageBox>
 
 ShaderWorkshop::ShaderWorkshop(QWidget *parent) :
     QWidget(parent),
@@ -121,8 +123,11 @@ EditorPage* ShaderWorkshop::createPage(const QString &name, int pageIndex)
 void ShaderWorkshop::createMenus()
 {
     QMenuBar *bar = new QMenuBar(this);
+    QMenu *file = bar->addMenu(tr("&File"));
     QMenu *build = bar->addMenu(tr("&Build"));
 
+    file->addAction(ui->actionOpen);
+    file->addAction(ui->actionSave);
     build->addAction(ui->actionRecompile_Shader);
 }
 
@@ -153,4 +158,56 @@ void ShaderWorkshop::on_actionRecompile_Shader_triggered()
     QString log = renderer->recompileEffectShader(pageIndex(page), source);
 
     page->shaderLogUpdated(log);
+}
+
+void ShaderWorkshop::on_actionOpen_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Shader"), "",
+                        tr("GLSL Fragment shader (*.frag);; Text file (*.txt)"));
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    QFile file(fileName);
+
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Could not open file %1:\n%2")
+                                .arg(fileName)
+                                .arg(file.errorString()));
+        return;
+    }
+
+    currentPage()->setShaderSource(file.readAll());
+}
+
+void ShaderWorkshop::on_actionSave_triggered()
+{
+    const EditorPage *page = currentPage();
+
+    if (!page->isShaderSourceModified()) {
+        return;
+    }
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Shader"), "",
+                        tr("GLSL Fragment shader (*.frag);; Text file (*.txt)"));
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    QFile file(fileName);
+
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("Shader Workshop"),
+                             tr("Could not write file %1:\n%2")
+                                .arg(fileName)
+                                .arg(file.errorString()));
+        return;
+    }
+
+    QTextStream out(&file);
+
+    out << page->shaderSource();
 }
