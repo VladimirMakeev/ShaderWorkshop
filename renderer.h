@@ -33,6 +33,10 @@ protected:
     void resizeGL(int w, int h) Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
 
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
 private:
     void setupVertexShader();
     void setupBuffers();
@@ -45,6 +49,7 @@ private:
     /// set sampler settings
     void bindEffectTextures(const Effect &effect);
     void setUniforms(const Effect &effect, QSize textureSize);
+    void convertPointToOpenGl(QPoint &point) const;
 
     QHash<int, Effect*> effects;
     Effect *mainImage;
@@ -55,7 +60,8 @@ private:
     QOpenGLVertexArrayObject vao;
     QOpenGLBuffer vbo;
     QElapsedTimer timer;
-
+    /// mouse pixel coordinates, xy: current if left button down, zw: click
+    QVector4D mouse;
     QSize fboTextureSize;
     QSize viewSize;
     int fps;

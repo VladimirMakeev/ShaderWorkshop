@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include <QMouseEvent>
 
 Renderer::Renderer(QWidget *parent) :
     QOpenGLWidget(parent),
@@ -55,6 +56,39 @@ void Renderer::paintGL()
     renderMainImage();
 }
 
+void Renderer::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = event->pos();
+
+        convertPointToOpenGl(pos);
+
+        mouse = QVector4D(pos.x(), pos.y(), pos.x(), pos.y());
+    }
+}
+
+void Renderer::mouseMoveEvent(QMouseEvent *event)
+{
+    QPoint pos = event->pos();
+
+    convertPointToOpenGl(pos);
+
+    mouse.setX(pos.x());
+    mouse.setY(pos.y());
+}
+
+void Renderer::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = event->pos();
+
+        convertPointToOpenGl(pos);
+
+        mouse.setZ(-qAbs(pos.x()));
+        mouse.setW(-qAbs(pos.y()));
+    }
+}
+
 QString Renderer::defaultFragmentShader() const
 {
     return QString{
@@ -68,6 +102,8 @@ QString Renderer::defaultFragmentShader() const
         "uniform int iFrame;\n"
         "// viewport resolution (in pixels)\n"
         "uniform vec2 iResolution;\n"
+        "// mouse pixel coords. xy: current (if LMB down), zw: click\n"
+        "uniform vec4 iMouse;\n"
         "\n"
         "void main(void)\n"
         "{\n"
@@ -305,4 +341,11 @@ void Renderer::setUniforms(const Effect &effect, QSize textureSize)
     program->setUniformValue("iTime", currentTime);
     program->setUniformValue("iFrame", effect.frame);
     program->setUniformValue("iResolution", textureSize);
+    program->setUniformValue("iMouse", mouse);
+}
+
+void Renderer::convertPointToOpenGl(QPoint &point) const
+{
+    // convert Y coordinate to OpenGL: (0, 0) is bottom-left corner
+    point.setY(viewSize.height() - point.y());
 }
