@@ -53,6 +53,7 @@ void ShaderWorkshop::newBufferRequested(const QString &name)
 
     EditorPage *page = pages.value(name);
     page->setShaderSource(renderer->defaultFragmentShader());
+    page->clearShaderLog();
 
     tab->insertTab(tab->count(), page, name);
     comboBox->removeItem(comboBox->findText(name));

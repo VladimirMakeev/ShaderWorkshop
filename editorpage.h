@@ -24,6 +24,7 @@ public:
     bool isShaderSourceModified() const;
 
     void shaderLogUpdated(const QString &log);
+    void clearShaderLog();
 
 private slots:
     void logMessageSelected(QListWidgetItem *item);

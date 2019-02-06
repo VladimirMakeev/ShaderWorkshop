@@ -53,6 +53,12 @@ void EditorPage::shaderLogUpdated(const QString &log)
     logList->show();
 }
 
+void EditorPage::clearShaderLog()
+{
+    logList->clear();
+    logList->hide();
+}
+
 void EditorPage::logMessageSelected(QListWidgetItem *item)
 {
     int line = 1;
