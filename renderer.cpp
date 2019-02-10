@@ -148,6 +148,9 @@ void Renderer::deleteEffect(int index)
 
     Q_ASSERT(removed == 1);
 
+    // prevent using this effect as other effects inputs before deletion
+    removeEffectFromInputs(effect);
+
     makeCurrent();
 
     delete effect;
@@ -185,6 +188,44 @@ QString Renderer::recompileEffectShader(int index, const QString &source)
     doneCurrent();
 
     return log;
+}
+
+void Renderer::effectInputChanged(int index, int channel, int effectIndex)
+{
+    Q_ASSERT(effects.contains(index));
+
+    Effect *effect = effects.value(index);
+    Effect *inputEffect = effects.contains(effectIndex) ?
+                            effects.value(effectIndex) : Q_NULLPTR;
+
+    Q_ASSERT(channel >= 0);
+    Q_ASSERT(effect->inputs.size() > channel);
+
+    effect->inputs[channel].effect = inputEffect;
+}
+
+void Renderer::effectFilteringChanged(int index, int channel, GLint value)
+{
+    Q_ASSERT(effects.contains(index));
+
+    Effect *effect = effects.value(index);
+
+    Q_ASSERT(channel >= 0);
+    Q_ASSERT(effect->inputs.size() > channel);
+
+    effect->inputs[channel].filter = value;
+}
+
+void Renderer::effectWrapChanged(int index, int channel, GLint value)
+{
+    Q_ASSERT(effects.contains(index));
+
+    Effect *effect = effects.value(index);
+
+    Q_ASSERT(channel >= 0);
+    Q_ASSERT(effect->inputs.size() > channel);
+
+    effect->inputs[channel].wrap = value;
 }
 
 void Renderer::setupVertexShader()
@@ -321,6 +362,17 @@ void Renderer::renderEffect(Effect &effect, QSize textureSize)
     setUniforms(effect, textureSize);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void Renderer::removeEffectFromInputs(const Effect *effect)
+{
+    for (auto &item : effects) {
+        for (auto &input : item->inputs) {
+            if (input.effect == effect) {
+                input.effect = Q_NULLPTR;
+            }
+        }
+    }
 }
 
 void Renderer::bindEffectTextures(const Effect &effect)

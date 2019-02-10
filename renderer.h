@@ -28,6 +28,11 @@ public:
     /// recompile fragment shader for effect
     QString recompileEffectShader(int index, const QString &source);
 
+public slots:
+    void effectInputChanged(int index, int channel, int effectIndex);
+    void effectFilteringChanged(int index, int channel, GLint value);
+    void effectWrapChanged(int index, int channel, GLint value);
+
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
     void resizeGL(int w, int h) Q_DECL_OVERRIDE;
@@ -45,6 +50,7 @@ private:
     void renderEffects();
     void renderMainImage();
     void renderEffect(Effect &effect, QSize textureSize);
+    void removeEffectFromInputs(const Effect *effect);
     /// bind textures according to this effect input channels settings,
     /// set sampler settings
     void bindEffectTextures(const Effect &effect);
