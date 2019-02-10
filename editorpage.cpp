@@ -80,6 +80,22 @@ void EditorPage::onChannelInputSettingChanged(int newPageIndex)
     emit channelInputChanged(pageIndex, num, newPageIndex);
 }
 
+void EditorPage::onChannelFilteringChanged(GLint value)
+{
+    ChannelSettings *channel = qobject_cast<ChannelSettings*>(sender());
+    int num = channelNumber(channel);
+
+    emit channelFilteringChanged(pageIndex, num, value);
+}
+
+void EditorPage::onChannelWrapChanged(GLint value)
+{
+    ChannelSettings *channel = qobject_cast<ChannelSettings*>(sender());
+    int num = channelNumber(channel);
+
+    emit channelWrapChanged(pageIndex, num, value);
+}
+
 void EditorPage::setupChannelSettings(const PagesData &data)
 {
     QGridLayout *grid = ui->gridLayout;
@@ -93,6 +109,12 @@ void EditorPage::setupChannelSettings(const PagesData &data)
 
         connect(channel, SIGNAL(channelInputChanged(int)),
                 this, SLOT(onChannelInputSettingChanged(int)));
+
+        connect(channel, SIGNAL(channelFilteringChanged(GLint)),
+                this, SLOT(onChannelFilteringChanged(GLint)));
+
+        connect(channel, SIGNAL(channelWrapChanged(GLint)),
+                this, SLOT(onChannelWrapChanged(GLint)));
     }
 }
 

@@ -5,6 +5,7 @@
 #include <QListWidget>
 #include <QList>
 #include <QPair>
+#include <QOpenGLFunctions>
 
 namespace Ui {
 class EditorPage;
@@ -33,10 +34,15 @@ public:
 
 signals:
     void channelInputChanged(int pageIndex, int channelNumber, int newPageIndex);
+    void channelFilteringChanged(int pageIndex, int channelNumber, GLint value);
+    void channelWrapChanged(int pageIndex, int channelNumber, GLint value);
 
 private slots:
     void logMessageSelected(QListWidgetItem *item);
+
     void onChannelInputSettingChanged(int newPageIndex);
+    void onChannelFilteringChanged(GLint value);
+    void onChannelWrapChanged(GLint value);
 
 private:
     void setupChannelSettings(const PagesData &data);
