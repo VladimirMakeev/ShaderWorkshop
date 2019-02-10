@@ -104,6 +104,11 @@ QString Renderer::defaultFragmentShader() const
         "uniform vec2 iResolution;\n"
         "// mouse pixel coords. xy: current (if LMB down), zw: click\n"
         "uniform vec4 iMouse;\n"
+        "// input channels\n"
+        "uniform sampler2D iChannel0;\n"
+        "uniform sampler2D iChannel1;\n"
+        "uniform sampler2D iChannel2;\n"
+        "uniform sampler2D iChannel3;\n"
         "\n"
         "void main(void)\n"
         "{\n"
@@ -324,6 +329,7 @@ void Renderer::bindEffectTextures(const Effect &effect)
 
     for (auto &input : effect.inputs) {
         glActiveTexture(GL_TEXTURE0 + textureUnit);
+        textureUnit++;
 
         auto otherEffect = input.effect;
         // if there is no input effect used, unbind texture
@@ -342,6 +348,10 @@ void Renderer::setUniforms(const Effect &effect, QSize textureSize)
     program->setUniformValue("iFrame", effect.frame);
     program->setUniformValue("iResolution", textureSize);
     program->setUniformValue("iMouse", mouse);
+    program->setUniformValue("iChannel0", 0);
+    program->setUniformValue("iChannel1", 1);
+    program->setUniformValue("iChannel2", 2);
+    program->setUniformValue("iChannel3", 3);
 }
 
 void Renderer::convertPointToOpenGl(QPoint &point) const
