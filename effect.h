@@ -10,8 +10,19 @@ class Effect;
 
 struct EffectChannelSettings
 {
+    EffectChannelSettings() :
+        effect(Q_NULLPTR),
+        filter(GL_LINEAR_MIPMAP_LINEAR),
+        wrap(GL_REPEAT)
+    {
+    }
+
     /// effect used by this channel
     Effect *effect;
+    /// texture filtering setting
+    GLint filter;
+    /// texture wrap setting
+    GLint wrap;
 };
 
 class Effect
