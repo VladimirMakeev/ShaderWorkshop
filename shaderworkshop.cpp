@@ -1,5 +1,4 @@
 #include "shaderworkshop.h"
-#include "editorpage.h"
 #include "renderer.h"
 #include "ui_shaderworkshop.h"
 #include <QMenuBar>
@@ -9,6 +8,7 @@
 ShaderWorkshop::ShaderWorkshop(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ShaderWorkshop),
+    imagePage(Q_NULLPTR),
     defaultItemName("Add buffer"),
     maxBufferPages(5),
     imagePageIndex(0),
@@ -87,22 +87,16 @@ void ShaderWorkshop::setupWidgets()
     comboBox = ui->comboBox;
     comboBox->addItem(defaultItemName);
 
-    EditorPage *imagePage = createPage("Image", imagePageIndex);
-    imagePage->setShaderSource(renderer->defaultFragmentShader());
-
-    int tabIndex = tab->insertTab(tab->count(), imagePage, tr("Image"));
-    // user should not be able to close main image page
-    tab->tabBar()->setTabButton(tabIndex, QTabBar::LeftSide, Q_NULLPTR);
-
+    PagesData pagesData;
     int pageIndex = imagePageIndex + 1;
 
     for (int i = 1; i < maxBufferPages; i++, pageIndex++) {
-        const QString name = bufferName(i - 1);
-
-        createPage(name, pageIndex);
-
-        comboBox->addItem(name);
+        pagesData.append(QPair<int, QString>(pageIndex, bufferName(i - 1)));
     }
+
+    createImagePage(pagesData);
+
+    createPages(pagesData);
 
     connect(comboBox, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::activated),
             this, &ShaderWorkshop::newBufferRequested);
@@ -111,14 +105,35 @@ void ShaderWorkshop::setupWidgets()
             this, SLOT(bufferCloseRequested(int)));
 }
 
-EditorPage* ShaderWorkshop::createPage(const QString &name, int pageIndex)
+EditorPage* ShaderWorkshop::createPage(const QString &name, int pageIndex,
+                                       const PagesData &data)
 {
-    EditorPage *page = new EditorPage;
+    EditorPage *page = new EditorPage(pageIndex, data);
 
     pages[name] = page;
     pageIndices[page] = pageIndex;
 
     return page;
+}
+
+void ShaderWorkshop::createImagePage(const PagesData &data)
+{
+    imagePage = createPage("Image", imagePageIndex, data);
+    imagePage->setShaderSource(renderer->defaultFragmentShader());
+
+    int tabIndex = tab->insertTab(tab->count(), imagePage, tr("Image"));
+    // user should not be able to close main image page
+    tab->tabBar()->setTabButton(tabIndex, QTabBar::LeftSide, Q_NULLPTR);
+}
+
+void ShaderWorkshop::createPages(const PagesData &data)
+{
+    for (const auto &item : data) {
+        const QString &name = item.second;
+
+        createPage(name, item.first, data);
+        comboBox->addItem(name);
+    }
 }
 
 void ShaderWorkshop::createMenus()

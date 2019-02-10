@@ -5,6 +5,7 @@
 #include <QTabWidget>
 #include <QComboBox>
 #include <QHash>
+#include "editorpage.h"
 
 namespace Ui {
 class ShaderWorkshop;
@@ -36,7 +37,9 @@ private slots:
 
 private:
     void setupWidgets();
-    EditorPage* createPage(const QString &name, int pageIndex);
+    EditorPage* createPage(const QString &name, int pageIndex, const PagesData &data);
+    void createImagePage(const PagesData &data);
+    void createPages(const PagesData &data);
     void createMenus();
     QString bufferName(int index) const;
     EditorPage* currentPage() const;
@@ -46,6 +49,7 @@ private:
     Renderer *renderer;
     QTabWidget *tab;
     QComboBox *comboBox;
+    EditorPage *imagePage;
     QHash<QString, EditorPage*> pages;
     /// indices for renderer effects management
     QHash<EditorPage*, int> pageIndices;

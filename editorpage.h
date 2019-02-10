@@ -12,6 +12,7 @@ class EditorPage;
 
 class GLSLHighlighter;
 class CodeEditor;
+class ChannelSettings;
 
 using PagesData = QList<QPair<int, QString>>;
 
@@ -20,7 +21,7 @@ class EditorPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit EditorPage(QWidget *parent = 0);
+    EditorPage(int pageIndex, const PagesData &data, QWidget *parent = Q_NULLPTR);
     ~EditorPage();
 
     QString shaderSource() const;
@@ -30,16 +31,24 @@ public:
     void shaderLogUpdated(const QString &log);
     void clearShaderLog();
 
+signals:
+    void channelInputChanged(int pageIndex, int channelNumber, int newPageIndex);
+
 private slots:
     void logMessageSelected(QListWidgetItem *item);
+    void onChannelInputSettingChanged(int newPageIndex);
 
 private:
+    void setupChannelSettings(const PagesData &data);
     bool parseLogMessage(const QString &message, int &line) const;
+    int channelNumber(ChannelSettings *channel) const;
 
     Ui::EditorPage *ui;
     CodeEditor *editor;
     GLSLHighlighter *highlighter;
     QListWidget *logList;
+    QList<ChannelSettings*> channels;
+    int pageIndex;
 };
 
 #endif // EDITORPAGE_H
