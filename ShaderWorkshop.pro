@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     effect.cpp \
     editorpage.cpp \
     codeeditor.cpp \
-    glslhighlighter.cpp
+    glslhighlighter.cpp \
+    channelsettings.cpp
 
 HEADERS  += shaderworkshop.h \
     renderer.h \
@@ -31,7 +32,9 @@ HEADERS  += shaderworkshop.h \
     editorpage.h \
     linenumberarea.h \
     codeeditor.h \
-    glslhighlighter.h
+    glslhighlighter.h \
+    channelsettings.h
 
 FORMS    += shaderworkshop.ui \
-    editorpage.ui
+    editorpage.ui \
+    channelsettings.ui

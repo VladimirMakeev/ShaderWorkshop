@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QListWidget>
+#include <QList>
+#include <QPair>
 
 namespace Ui {
 class EditorPage;
@@ -10,6 +12,8 @@ class EditorPage;
 
 class GLSLHighlighter;
 class CodeEditor;
+
+using PagesData = QList<QPair<int, QString>>;
 
 class EditorPage : public QWidget
 {
