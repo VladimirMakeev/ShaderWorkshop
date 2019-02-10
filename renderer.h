@@ -54,6 +54,7 @@ private:
     /// bind textures according to this effect input channels settings,
     /// set sampler settings
     void bindEffectTextures(const Effect &effect);
+    void setSamplingParameters(const EffectChannelSettings &settings);
     void setUniforms(const Effect &effect, QSize textureSize);
     void convertPointToOpenGl(QPoint &point) const;
 

@@ -388,6 +388,45 @@ void Renderer::bindEffectTextures(const Effect &effect)
         GLuint id = otherEffect ? otherEffect->framebuffer->texture() : 0;
 
         glBindTexture(GL_TEXTURE_2D, id);
+
+        if (id) {
+            setSamplingParameters(input);
+        }
+    }
+}
+
+void Renderer::setSamplingParameters(const EffectChannelSettings &settings)
+{
+    switch (settings.filter) {
+    case GL_LINEAR_MIPMAP_LINEAR:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        break;
+    case GL_LINEAR:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        break;
+    case GL_NEAREST:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        break;
+    default:
+        Q_ASSERT(false);
+    }
+
+    switch (settings.wrap) {
+    case GL_REPEAT:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        break;
+    case GL_CLAMP_TO_EDGE:
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        break;
+
+    default:
+        Q_ASSERT(false);
     }
 }
 
