@@ -44,6 +44,8 @@ private:
     QString bufferName(int index) const;
     EditorPage* currentPage() const;
     int pageIndex(EditorPage *page) const;
+    void connectPage(EditorPage *page);
+    void disconnectPage(EditorPage *page);
 
     Ui::ShaderWorkshop *ui;
     Renderer *renderer;

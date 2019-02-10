@@ -36,6 +36,7 @@ void ShaderWorkshop::paintEvent(QPaintEvent *event)
         // its OpenGL context
         renderer->createEffect(imagePageIndex);
 
+        connectPage(imagePage);
         imageEffectCreated = true;
     }
 
@@ -61,6 +62,8 @@ void ShaderWorkshop::newBufferRequested(const QString &name)
     comboBox->setCurrentText(defaultItemName);
 
     renderer->createEffect(pageIndex(page));
+
+    connectPage(page);
 }
 
 void ShaderWorkshop::bufferCloseRequested(int tabIndex)
@@ -75,6 +78,8 @@ void ShaderWorkshop::bufferCloseRequested(int tabIndex)
     EditorPage *page = pages.value(name);
 
     renderer->deleteEffect(pageIndex(page));
+
+    disconnectPage(page);
 }
 
 void ShaderWorkshop::setupWidgets()
@@ -164,6 +169,30 @@ int ShaderWorkshop::pageIndex(EditorPage *page) const
     Q_ASSERT(pageIndices.contains(page));
 
     return pageIndices.value(page);
+}
+
+void ShaderWorkshop::connectPage(EditorPage *page)
+{
+    connect(page, SIGNAL(channelInputChanged(int,int,int)),
+            renderer, SLOT(effectInputChanged(int,int,int)));
+
+    connect(page, SIGNAL(channelFilteringChanged(int,int,GLint)),
+            renderer, SLOT(effectFilteringChanged(int,int,GLint)));
+
+    connect(page, SIGNAL(channelWrapChanged(int,int,GLint)),
+            renderer, SLOT(effectWrapChanged(int,int,GLint)));
+}
+
+void ShaderWorkshop::disconnectPage(EditorPage *page)
+{
+    disconnect(page, SIGNAL(channelInputChanged(int,int,int)),
+               renderer, SLOT(effectInputChanged(int,int,int)));
+
+    disconnect(page, SIGNAL(channelFilteringChanged(int,int,GLint)),
+               renderer, SLOT(effectFilteringChanged(int,int,GLint)));
+
+    disconnect(page, SIGNAL(channelWrapChanged(int,int,GLint)),
+               renderer, SLOT(effectWrapChanged(int,int,GLint)));
 }
 
 void ShaderWorkshop::on_actionRecompile_Shader_triggered()
