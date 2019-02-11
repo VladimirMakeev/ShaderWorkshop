@@ -164,10 +164,12 @@ void ShaderWorkshop::createMenus()
     QMenuBar *bar = new QMenuBar(this);
     QMenu *file = bar->addMenu(tr("&File"));
     QMenu *build = bar->addMenu(tr("&Build"));
+    QMenu *about = bar->addMenu(tr("&Help"));
 
     file->addAction(ui->actionOpen);
     file->addAction(ui->actionSave);
     build->addAction(ui->actionRecompile_Shader);
+    about->addAction(ui->actionAbout);
 }
 
 QString ShaderWorkshop::bufferName(int index) const
@@ -273,4 +275,23 @@ void ShaderWorkshop::on_actionSave_triggered()
     QTextStream out(&file);
 
     out << page->shaderSource();
+}
+
+void ShaderWorkshop::on_actionAbout_triggered()
+{
+    const QString text{
+        "<h3>ShaderWorkshop</h3>\n\n"
+        "Inspired by <a href='https://www.shadertoy.com'>ShaderToy</a>, "
+        "made with <a href='https://www.qt.io'>Qt</a>\n\n"
+        "<p>Copyright (C) 2019 Vladimir Makeev.\n"
+        "ShaderWorkshop is licensed under the GNU LGPL version 3.0.\n"
+        "Source code is available at "
+        "<a href='https://github.com/VladimirMakeev/ShaderWorkshop'>GitHub</a>.</p>"
+    };
+
+    QMessageBox box(this);
+    box.setTextFormat(Qt::RichText);
+    box.setWindowTitle("About ShaderWorkshop");
+    box.setText(text);
+    box.exec();
 }
