@@ -19,3 +19,14 @@ for changes to take effect.
 [Soft shadows](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/SoftShadowTest/soft_shadow.frag):
 
 ![Soft shadow screenshot](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/SoftShadowTest/screenshot.png)
+
+Path tracer demo:<br />
+[Image](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/PathTracerDemo/image.frag): iChannel0 input Buffer A<br />
+[Buffer A](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/PathTracerDemo/bufferA.frag): iChannel0 input BufferA, iChannel1 input BufferB<br />
+[Buffer B](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/PathTracerDemo/bufferB.frag): iChannel0 input BufferB
+
+![Path tracer demo screenshot](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/PathTracerDemo/screenshot.png)
+
+[Seascape](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/Seascape/seascape.frag):
+
+![Seascape screenshot](https://github.com/VladimirMakeev/ShaderWorkshop-examples/blob/master/Seascape/screenshot.png)
